@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+// NOT USED ===> JUST EXAMPLE FOR MYSELF
+
 const withStateOfForm = WrappedComponent => {
   return class withStateOfForm extends Component {
     // componentDidMount() {

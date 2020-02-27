@@ -114,14 +114,14 @@ class App extends Component {
         {contacts.length >= 2 && (
           <Filter value={filter} onChangeFilter={this.changeFilter} />
         )}
-        {visibleContacts.length > 0 ? (
-          <ContactList
-            contacts={visibleContacts}
-            onRemoveContact={this.removeContact}
-          />
-        ) : contacts.length === 0 ? (
+        <ContactList
+          contacts={visibleContacts}
+          onRemoveContact={this.removeContact}
+        />
+        {contacts.length === 0 && (
           <Text>There are no contacts. Add some :)</Text>
-        ) : (
+        )}
+        {contacts.length > 1 && visibleContacts.length === 0 && (
           <Text>No contacts found :(</Text>
         )}
       </Layout>

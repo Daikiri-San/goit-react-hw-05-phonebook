@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import withStateOfForm from './hoc/withStateOfForm';
+import { Formik } from 'formik';
 
 const Form = styled.form`
   margin-bottom: 3.4rem;
@@ -55,39 +55,76 @@ const Button = styled.button`
   }
 `;
 
+const ErrorText = styled.div`
+  color: red;
+  font-size: 2rem;
+  margin-top: -2rem;
+  margin-bottom: 2rem;
+`;
+
 class ContactForm extends Component {
   static propTypes = {
     onAddContact: PropTypes.func,
   };
+  //
 
   render() {
-    const { name, number, handleSubmit, handleInputChange } = this.props;
+    const { onAddContact } = this.props;
     return (
-      <Form onSubmit={handleSubmit}>
-        <Label>
-          Name
-          <Input
-            type="text"
-            required
-            name="name"
-            value={name}
-            onChange={handleInputChange}
-          />
-        </Label>
-        <Label>
-          Number
-          <Input
-            type="tel"
-            required
-            name="number"
-            value={number}
-            onChange={handleInputChange}
-          />
-        </Label>
-        <Button type="submit">Add contact</Button>
-      </Form>
+      <Formik
+        initialValues={{ name: '', number: '' }}
+        validate={values => {
+          const errors = {};
+          if (!values.name) {
+            errors.name = <ErrorText>Name is Required</ErrorText>;
+          }
+          return errors;
+        }}
+        onSubmit={(values, { setSubmitting }) => {
+          onAddContact(values.name, values.number);
+          setSubmitting(false);
+        }}
+      >
+        {({
+          values,
+          errors,
+          touched,
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          isSubmitting,
+        }) => (
+          <Form onSubmit={handleSubmit}>
+            <Label>
+              Name
+              <Input
+                type="text"
+                name="name"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.name}
+              />
+              {errors.name && touched.name && errors.name}
+            </Label>
+            <Label>
+              Number
+              <Input
+                type="tel"
+                name="number"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.number}
+              />
+              {errors.number && touched.number && errors.number}
+            </Label>
+            <Button type="submit" disabled={isSubmitting}>
+              Add contact
+            </Button>
+          </Form>
+        )}
+      </Formik>
     );
   }
 }
 
-export default withStateOfForm(ContactForm);
+export default ContactForm;
