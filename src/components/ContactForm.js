@@ -80,10 +80,10 @@ class ContactForm extends Component {
           }
           return errors;
         }}
-        onSubmit={(values, { setSubmitting, handleReset }) => {
+        onSubmit={(values, { setSubmitting, resetForm }) => {
           onAddContact(values.name, values.number);
           setSubmitting(false);
-          handleReset();
+          resetForm();
         }}
       >
         {({
@@ -94,7 +94,6 @@ class ContactForm extends Component {
           handleBlur,
           handleSubmit,
           isSubmitting,
-          handleReset,
         }) => (
           <Form onSubmit={handleSubmit}>
             <Label>
@@ -119,11 +118,7 @@ class ContactForm extends Component {
               />
               {errors.number && touched.number && errors.number}
             </Label>
-            <Button
-              type="submit"
-              disabled={isSubmitting}
-              onClick={() => setTimeout(() => handleReset(), 100)}
-            >
+            <Button type="submit" disabled={isSubmitting}>
               Add contact
             </Button>
           </Form>
