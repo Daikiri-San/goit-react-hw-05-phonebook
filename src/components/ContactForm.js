@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import PropTypes from 'prop-types';
 import { Formik } from 'formik';
 
@@ -16,6 +16,11 @@ const Form = styled.form`
 const Label = styled.label`
   font-size: 2.4rem;
   cursor: pointer;
+  ${props =>
+    props.error &&
+    css`
+      color: red;
+    `}
 `;
 
 const Input = styled.input`
@@ -28,6 +33,17 @@ const Input = styled.input`
   &:focus {
     border-color: #1d2bcc;
   }
+
+  ${props =>
+    props.isValid &&
+    css`
+      border: 0.3rem solid lightgreen;
+    `}
+  ${props =>
+    props.error &&
+    css`
+      border: 0.3rem solid red;
+    `}
 `;
 
 const Button = styled.button`
@@ -96,17 +112,44 @@ class ContactForm extends Component {
           isSubmitting,
         }) => (
           <Form onSubmit={handleSubmit}>
-            <Label>
-              Name
-              <Input
-                type="text"
-                name="name"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.name}
-              />
-              {errors.name && touched.name && errors.name}
-            </Label>
+            {errors.name ? (
+              <Label error>
+                Name
+                <Input
+                  error
+                  type="text"
+                  name="name"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.name}
+                />
+                {errors.name && touched.name && errors.name}
+              </Label>
+            ) : (
+              <Label>
+                Name
+                {touched.name ? (
+                  <Input
+                    isValid
+                    type="text"
+                    name="name"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.name}
+                  />
+                ) : (
+                  <Input
+                    type="text"
+                    name="name"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.name}
+                  />
+                )}
+                {errors.name && touched.name && errors.name}
+              </Label>
+            )}
+
             <Label>
               Number
               <Input

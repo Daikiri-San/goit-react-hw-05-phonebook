@@ -70,7 +70,7 @@ class App extends Component {
           this.setState({
             apearNotice: false,
           }),
-        2000,
+        3000,
       );
     }
     const newContact = {
