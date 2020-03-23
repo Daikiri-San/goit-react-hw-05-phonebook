@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { Component } from 'react';
 import styled from 'styled-components';
+import { CSSTransition } from 'react-transition-group';
+import scaleTransition from './transitions/scale.module.css';
 
 const Container = styled.div`
   margin-bottom: 3rem;
@@ -25,19 +27,69 @@ const Input = styled.input`
   }
 `;
 
-function Filter({ value, onChangeFilter }) {
-  return (
-    <Container>
-      <Label>
-        Find contacts by name
-        <Input
-          type="text"
-          value={value}
-          onChange={({ target: { value } }) => onChangeFilter(value)}
-        />
-      </Label>
-    </Container>
-  );
+class Filter extends Component {
+  state = {
+    appear: false,
+  };
+
+  componentDidMount() {
+    const { contacts } = this.props;
+    if (contacts.length <= 1) {
+      return;
+    }
+    this.setState({
+      appear: true,
+    });
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.contacts.length !== this.props.contacts.length) {
+      const { contacts } = this.props;
+      if (contacts.length > 1) {
+        return this.toAppear();
+      }
+      if (contacts.length <= 1) {
+        return this.toUnAppear();
+      }
+    }
+  }
+
+  toAppear = () => {
+    this.setState({
+      appear: true,
+    });
+  };
+
+  toUnAppear = () => {
+    this.setState({
+      appear: false,
+    });
+  };
+
+  render() {
+    const { appear } = this.state;
+    const { value, onChangeFilter } = this.props;
+
+    return (
+      <CSSTransition
+        timeout={250}
+        classNames={scaleTransition}
+        in={appear}
+        unmountOnExit
+      >
+        <Container>
+          <Label>
+            Find contacts by name
+            <Input
+              type="text"
+              value={value}
+              onChange={({ target: { value } }) => onChangeFilter(value)}
+            />
+          </Label>
+        </Container>
+      </CSSTransition>
+    );
+  }
 }
 
 export default Filter;

@@ -17,16 +17,12 @@ class App extends Component {
   state = {
     contacts: [],
     filter: '',
-    apearPage: false,
     apearNotice: false,
     notice: null,
   };
 
   componentDidMount() {
     const savedContacts = localStorage.getItem('contacts');
-    this.setState({
-      apearPage: true,
-    });
 
     if (savedContacts) {
       this.setState({
@@ -101,19 +97,22 @@ class App extends Component {
   };
 
   render() {
-    const { contacts, filter, apearPage, notice, apearNotice } = this.state;
+    const { contacts, filter, notice, apearNotice } = this.state;
     const visibleContacts = this.getVisibleContacts();
 
     return (
       <Layout>
-        <Title text={'Phonebook'} apearPage={apearPage} />
+        <Title text={'Phonebook'} />
         <ContactForm onAddContact={this.addContact} />
 
         <Notification message={notice} apearNotice={apearNotice} />
 
-        {contacts.length >= 2 && (
-          <Filter value={filter} onChangeFilter={this.changeFilter} />
-        )}
+        <Filter
+          value={filter}
+          onChangeFilter={this.changeFilter}
+          contacts={contacts}
+        />
+
         <ContactList
           contacts={visibleContacts}
           onRemoveContact={this.removeContact}

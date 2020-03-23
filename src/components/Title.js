@@ -9,13 +9,14 @@ const TitleText = styled.h1`
   color: #1d2bcc;
 `;
 
-function Title({ text, apearPage }) {
+function Title({ text }) {
   return (
     <>
       <CSSTransition
         timeout={500}
         classNames={slideTitleTransition}
-        in={apearPage}
+        in={true}
+        appear={true}
       >
         <TitleText>{text}</TitleText>
       </CSSTransition>
